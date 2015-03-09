@@ -28,20 +28,20 @@ end
 
 function SpatialConvolutionMM:reset(stdv)
    if stdv then
-      stdv = stdv * math.sqrt(3)
+      stdv = stdv
    else
-      stdv = 1/math.sqrt(self.kW*self.kH*self.nInputPlane)
+      stdv = math.sqrt(2/(self.kW*self.kH*self.nInputPlane))
    end
    if nn.oldSeed then
       self.weight:apply(function()
-         return torch.uniform(-stdv, stdv)
+         return torch.randn(0, stdv)
       end)
       self.bias:apply(function()
-         return torch.uniform(-stdv, stdv)
+         return 0
       end)  
    else
-      self.weight:uniform(-stdv, stdv)
-      self.bias:uniform(-stdv, stdv)
+      self.weight:normal(0, stdv)
+      self.bias:fill(0)
    end
 end
 
